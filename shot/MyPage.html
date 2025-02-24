@@ -1,0 +1,42 @@
+{{ block title }}
+    截图界面
+{{ endblock }}
+{{ block content }}
+    <p>请按照指示操作，界面将每5秒截图一次。</p>
+    <!-- 这里可以放实验的具体内容 -->
+
+    <!-- 引入 html2canvas -->
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>-->
+    <script src="{{ static 'js/html2canvas.min.js' }}"></script>
+    <script>
+        // 每5秒截图一次
+        setInterval(() => {
+            captureScreenshot();
+        }, 5000);
+
+        function captureScreenshot() {
+            html2canvas(document.body).then(canvas => {
+                const screenshotData = canvas.toDataURL('image/png');
+                sendScreenshot(screenshotData);
+            }).catch(error => {
+                console.error('截图失败:', error);
+            });
+        }
+
+        function sendScreenshot(screenshotData) {
+            // 通过 LiveSend 发送数据到后端
+            liveSend({
+                action: 'save_screenshot',
+                timestamp: new Date().toISOString(),
+                image: screenshotData
+            });
+        }
+
+        // 接收后端返回的消息（可选，用于调试）
+        function liveRecv(data) {
+            if (data.status === 'success') {
+                console.log('截图已保存');
+            }
+        }
+    </script>
+{{ endblock }}

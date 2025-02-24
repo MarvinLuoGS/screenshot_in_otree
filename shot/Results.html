@@ -1,0 +1,17 @@
+{{ block title }}
+    截图结果
+{{ endblock }}
+
+{{ block content }}
+
+    {{ for screenshot in screenshots }}
+        <p>时间戳: {{ screenshot.timestamp }}</p>
+        <img src="{{ screenshot.image_data }}" alt="截图" style="max-width: 100%;">
+        <hr>
+    {{ endfor }}
+    {{ if not screenshots }}
+        <p>您还没有截图记录。</p>
+    {{ endif }}
+{{ endblock }}
+
+
